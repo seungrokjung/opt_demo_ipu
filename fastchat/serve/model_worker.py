@@ -63,6 +63,9 @@ def load_model(model_path, num_gpus, wbits, groupsize):
             act_scales = torch.load(os.getenv("PYTORCH_AIE_PATH") + "/ext/smoothquant/act_scales/opt-1.3b.pt")
         elif model_path == "facebook/opt-2.7b":
             act_scales = torch.load(os.getenv("PYTORCH_AIE_PATH") + "/ext/smoothquant/act_scales/opt-2.7b.pt")
+        elif model_path == "chatopt_1.3b_gpt4only":
+            print(model_path)
+            act_scales = torch.load(os.getenv("PYTORCH_AIE_PATH") + "/ext/smoothquant/act_scales/opt-1.3b.pt")
         smooth.smooth_lm(model, act_scales, 0.5)
         model = torch.ao.quantization.quantize_dynamic(model, {torch.nn.Linear}, dtype=torch.qint8, inplace=True)
         collected = gc.collect()
@@ -261,7 +264,7 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=21002)
     parser.add_argument("--worker-address", type=str, default="http://127.0.0.1:21002")
     parser.add_argument("--controller-address", type=str, default="http://127.0.0.1:21005")
-    parser.add_argument("--model-path", type=str, default="facebook/opt-1.3b")
+    parser.add_argument("--model-path", type=str, default="chatopt_1.3b_gpt4only")
     parser.add_argument("--model-name", type=str)
     parser.add_argument("--num-gpus", type=int, default=0)
     parser.add_argument("--limit-model-concurrency", type=int, default=5)

@@ -150,9 +150,10 @@ def post_process_code(code):
 def http_bot(state, model_selector, temperature, max_new_tokens, request: gr.Request):
     start_tstamp = time.time()
     if model_selector  == "opt-6.7b":
-        model_name = "opt-1.3b"
+        model_name = "chatopt_1.3b_gpt4only"
     else:
         model_name = model_selector
+    print("selected model: ", model_name)
 
     if state.skip_next:
         # This generate call is skipped due to invalid inputs
@@ -161,8 +162,8 @@ def http_bot(state, model_selector, temperature, max_new_tokens, request: gr.Req
 
     if len(state.messages) == state.offset + 2:
         # First round of conversation
-        if "koala" in model_name: # Hardcode the condition
-            template_name = "bair_v1"
+        if model_name == "chatopt_1.3b_gpt4only":
+            template_name = "baseline_v0"
         else:
             template_name = "v1"
         new_state = conv_templates[template_name].copy()
@@ -249,8 +250,8 @@ markdown_head = ("""
 #2
 markdown_model_sel = ("""
 ## Model selector:
-** opt 1.3b
-** opt 6.7b
+** chatopt_1.3b_gpt4only (finetuned opt 1.3b)
+** opt 6.7b (dummy)
 """)
 
 license_markdown = ("""
@@ -312,8 +313,9 @@ def build_demo(theme):
         gr.Markdown(license_markdown)
 
         url_params = gr.JSON(visible=False)
+        print(models)
 
-        # Register listeners
+    # Register listeners
         btn_list = [upvote_btn, downvote_btn, flag_btn, regenerate_btn, clear_btn]
         upvote_btn.click(upvote_last_response,
             [state, model_selector], [textbox, upvote_btn, downvote_btn, flag_btn])

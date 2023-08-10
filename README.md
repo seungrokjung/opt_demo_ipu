@@ -9,16 +9,6 @@ OPT demo user interfacet for serving and evaluating GPT-based Chatbot. The demo 
 
 <a ><img src="assets/web_uxui.jpg" width="100%"></a>
 
-## Contents
-- [Install](#install)
-- [Model Weights](#model-weights)
-- [Inference with Command Line Interface](#inference-with-command-line-interface)
-- [Serving with Web GUI](#serving-with-web-gui)
-- [API](#api)
-- [Evaluation](#evaluation)
-- [Fine-tuning](#fine-tuning)
-- [Citation](#citation)
-
 ## Install
 
 ### Launch anaconda prompt as an administrator and follow these steps
@@ -28,9 +18,9 @@ Install git in the beginning
 ```bash
 conda install -c anaconda git
 ```
-
-Clone the IPU transformers environment repo (https://gitenterprise.xilinx.com/VitisAI/transformers/tree/release_2) and follow instructions in the README 
-Install the packages in the following path:
+Clone the IPU transformers environment repo (https://gitenterprise.xilinx.com/VitisAI/transformers/tree/release_2) 
+Follow instructions in the README 
+Install the packages to the following path:
 C:\Users\Transformers\transformers
 
 2. Clone this repository (https://github.com/seungrokjung/opt_demo_ipu.git) to the following folder:
@@ -48,14 +38,16 @@ pip install -r requirements.txt
 ```
 
 4. Launch demo scripts and wait a few minutes until the model is preloaded & quantized. 
+
+5. Copy the "chatopt_1.3b_gpt4only" model to the current directory. 
 ```bash
-chatgpt_launch.bat
+cp -rf $model_src chatopt_1.3b_gpt4only
 ```
 
-5. Once the demo is ready, the environment will look like this:
+6. Once the demo is ready, the environment will look like this:
 <a ><img src="assets/demo_setup.jpg" width="100%"></a>
 
-6. Open a web browswer and navigate to "localhost:1001". Default username/password for the uxui are "amd/7890".
+7. Open a web browswer and navigate to "localhost:1001". Default username/password for the uxui are "amd/7890".
 
 
 ## Modification
@@ -65,4 +57,4 @@ https://github.com/seungrokjung/opt_demo_ipu/blob/5a45c31b1e869d35cc72e12b1f03b7
 
 ## Restrictions
 
-Opt-6.7b model is dummy. The demo runs with opt-1.3b model even if we choose opt-6.7b model in the uxui.
+"opt-6.7b" model is dummy. If users select "opt-6.7b" model in the uxui web page, it will load "chatopt-1.3b_gpt4only" model to the model worker as it is hard-coded.

@@ -54,3 +54,5 @@ chatgpt_launch.bat
 
 5. Once the demo is ready, the environment will look like this:
 <a ><img src="assets/demo_setup.jpg" width="100%"></a>
+
+6. Open a web browswer and navigate to "localhost:1001". Default username/password for the uxui are "amd/7890".

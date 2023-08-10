@@ -56,3 +56,13 @@ chatgpt_launch.bat
 <a ><img src="assets/demo_setup.jpg" width="100%"></a>
 
 6. Open a web browswer and navigate to "localhost:1001". Default username/password for the uxui are "amd/7890".
+
+
+## Modification
+
+You can change demo uxui interface by changing the markdown here:
+https://github.com/seungrokjung/opt_demo_ipu/blob/5a45c31b1e869d35cc72e12b1f03b7f65a061574/fastchat/serve/gradio_web_server.py#L240
+
+## Restrictions
+
+Opt-6.7b model is dummy. The demo runs with opt-1.3b model even if we choose opt-6.7b model in the uxui.

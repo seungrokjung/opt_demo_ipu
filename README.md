@@ -37,12 +37,12 @@ cd C:\Users\Transformers\demo\opt_demo_ipu
 pip install -r requirements.txt
 ```
 
-4. Launch demo scripts and wait a few minutes until the model is preloaded & quantized. 
-
-5. Copy the "chatopt_1.3b_gpt4only" model to the current directory. 
+4. Copy the "chatopt_1.3b_gpt4only" model to the current directory. 
 ```bash
 cp -rf $model_src chatopt_1.3b_gpt4only
 ```
+
+5. Launch demo scripts and wait a few minutes until the model is preloaded & quantized. 
 
 6. Once the demo is ready, the environment will look like this:
 <a ><img src="assets/demo_setup.jpg" width="100%"></a>

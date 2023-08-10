@@ -1,5 +1,6 @@
 # OPT demo on Ryzen AI IPU
-OPT demo user interfacet for serving and evaluating GPT-based Chatbot. The demo system consists of three parts. 
+OPT demo user interface for serving and evaluating GPT-based Chatbot. 
+The demo system consists of three parts. 
 - Web ux/ui: Provides user interface with configurable parameters, such as temperature for token decoding sampling & max output token length
 - Model worker: Launches, OPT models in quantizable format so that IPU can offload Matmul kernel operations. 
 - Controller: Links Model worker and Web ux/ui
@@ -43,8 +44,12 @@ cp -rf $model_src chatopt_1.3b_gpt4only
 ```
 
 5. Launch demo scripts and wait a few minutes until the model is preloaded & quantized. 
+This script lanches 1) controller, 2) model worker, and 3) web ux/ui in individual windows
+```bash
+chatgpt_launch.bat
+```
 
-6. Once the demo is ready, the environment will look like this:
+6. Once the demo is ready, the environment will look like this (The ERROR message in controller window is negligible):
 <a ><img src="assets/demo_setup.jpg" width="100%"></a>
 
 7. Open a web browswer and navigate to "localhost:1001". Default username/password for the uxui are "amd/7890".
@@ -57,4 +62,4 @@ https://github.com/seungrokjung/opt_demo_ipu/blob/5a45c31b1e869d35cc72e12b1f03b7
 
 ## Restrictions
 
-"opt-6.7b" model is dummy. If users select "opt-6.7b" model in the uxui web page, it will load "chatopt-1.3b_gpt4only" model to the model worker as it is hard-coded.
+"opt-6.7b" model is a dummy. If users select "opt-6.7b" model in the uxui web page, it will load "chatopt-1.3b_gpt4only" model to the model worker as it is hard-coded.

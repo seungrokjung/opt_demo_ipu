@@ -163,7 +163,8 @@ def http_bot(state, model_selector, temperature, max_new_tokens, request: gr.Req
     if len(state.messages) == state.offset + 2:
         # First round of conversation
         if model_name == "chatopt_1.3b_gpt4only":
-            template_name = "baseline_v0"
+            #template_name = "baseline_v0"
+            template_name = "v1"
         else:
             template_name = "v1"
         new_state = conv_templates[template_name].copy()
@@ -242,7 +243,7 @@ markdown_head = ("""
 # Open Pre-trained Transformer Language Model (OPT) on AMD IPU (AIE)
 
 ## Models / Quantization / Optimization
-** opt 6.7b model (int8)**
+** opt 1.3b/6.7b model (int8)**
 ** torch dynamic PTQ
 ** smooth quant
 """)
@@ -251,7 +252,7 @@ markdown_head = ("""
 markdown_model_sel = ("""
 ## Model selector:
 ** chatopt_1.3b_gpt4only (finetuned opt 1.3b)
-** opt 6.7b (dummy)
+** opt 6.7b 
 """)
 
 license_markdown = ("""

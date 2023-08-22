@@ -42,6 +42,8 @@ pip install -r requirements.txt
 ```bash
 cp -rf $model_src chatopt_1.3b_gpt4only
 ```
+After you copy the model, the model folder in the current path should look like this:
+<a ><img src="assets/directory_structure.jpg" width="100%"></a>
 
 5. Launch demo scripts and wait a few minutes until the model is preloaded & quantized. 
 This script lanches 1) controller, 2) model worker, and 3) web ux/ui in individual windows

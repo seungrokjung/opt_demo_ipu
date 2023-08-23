@@ -46,36 +46,26 @@ def heart_beat_worker(controller):
         time.sleep(WORKER_HEART_BEAT_INTERVAL)
         controller.send_heart_beat()
 
-def load_model(model_path, num_gpus, wbits, groupsize):
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-
-    if wbits > 0: #gptq
-        from fastchat.serve.load_gptq_model import load_quantized
-
-        print("Loading GPTQ quantized model...")
-        model = load_quantized(model_path)
-        model.to("cuda:0")
+def load_model(model_path, model_file, num_gpus):
+    model_org =  model_path.split("/")[0]
+    model_name = model_path.split("/")[1]
+    if model_org == "local_dir":
+        tokenizer = AutoTokenizer.from_pretrained(model_name) #exception: hard-coded
     else:
-        print("Load FP32 model...")
-        model = OPTForCausalLM.from_pretrained(model_path, torch_dtype=torch.float32)
-        print("Deploy smooth quant...")
-        if model_path == "facebook/opt-1.3b":
-            act_scales = torch.load(os.getenv("PYTORCH_AIE_PATH") + "/ext/smoothquant/act_scales/opt-1.3b.pt")
-        elif model_path == "facebook/opt-2.7b":
-            act_scales = torch.load(os.getenv("PYTORCH_AIE_PATH") + "/ext/smoothquant/act_scales/opt-2.7b.pt")
-        elif model_path == "chatopt_1.3b_gpt4only":
-            print(model_path)
-            act_scales = torch.load(os.getenv("PYTORCH_AIE_PATH") + "/ext/smoothquant/act_scales/opt-1.3b.pt")
-        smooth.smooth_lm(model, act_scales, 0.5)
-        model = torch.ao.quantization.quantize_dynamic(model, {torch.nn.Linear}, dtype=torch.qint8, inplace=True)
-        collected = gc.collect()
-        
-        node_args = ()
-        quant_mode = 1
-        node_kwargs = {'device': 'aie', 'quant_mode':quant_mode}
-        print("Quantize FP32 model...")
-        Utils.replace_node( model, torch.ao.nn.quantized.dynamic.modules.linear.Linear, qlinear.QLinear, node_args, node_kwargs )
-        collected = gc.collect()
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
+    print("Load FP32 model...")
+    model = torch.load(model_file)
+    model.eval()
+
+    node_args = ()
+    node_kwargs = {}
+    print("Deploy smooth quant...")
+    Utils.replace_node( model, 
+                        torch.ao.nn.quantized.dynamic.modules.linear.Linear,
+                        qlinear.QLinear, 
+                        node_args, node_kwargs 
+                      )
+    collected = gc.collect()
 
     if num_gpus == 1:
         model.cuda("cuda:0")
@@ -90,18 +80,18 @@ def load_model(model_path, num_gpus, wbits, groupsize):
 class ModelWorker:
     def __init__(self, controller_addr, worker_addr,
                  worker_id, no_register,
-                 model_path, model_name, num_gpus,
-                 wbits, groupsize):
+                 model_path, model_file, num_gpus
+                 ):
         self.controller_addr = controller_addr
         self.worker_addr = worker_addr
         self.worker_id = worker_id
         if model_path.endswith("/"):
             model_path = model_path[:-1]
-        self.model_name = model_name or model_path.split("/")[-1]
+        self.model_name = model_path.split("/")[-1]
 
         if logger_use == True:
             logger.info(f"Loading the model {self.model_name} on worker {worker_id} ...")
-        self.tokenizer, self.model, self.context_len = load_model( model_path, num_gpus, wbits, groupsize)
+        self.tokenizer, self.model, self.context_len = load_model(model_path, model_file, num_gpus)
 
         if not no_register:
             self.register_to_controller()
@@ -264,14 +254,12 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=21002)
     parser.add_argument("--worker-address", type=str, default="http://127.0.0.1:21002")
     parser.add_argument("--controller-address", type=str, default="http://127.0.0.1:21005")
-    parser.add_argument("--model-path", type=str, default="chatopt_1.3b_gpt4only")
-    parser.add_argument("--model-name", type=str)
+    parser.add_argument("--model-path", type=str, default="facebook/opt-1.3b", choices=["facebook/opt-1.3b", "local_dir/chatopt_1.3b_gpt4only"])
+    parser.add_argument("--model-file", type=str, default="quantized_opt-1.3b.pth", choices=["quantized_opt-1.3b.pth", "quantized_chatopt_1.3b_gpt4only.pth"])
     parser.add_argument("--num-gpus", type=int, default=0)
     parser.add_argument("--limit-model-concurrency", type=int, default=5)
     parser.add_argument("--stream-interval", type=int, default=2)
     parser.add_argument("--no-register", action="store_true")
-    parser.add_argument("--wbits", type=int, default = 0)
-    parser.add_argument("--groupsize", type=int, default = 0)
     args = parser.parse_args()
     if logger_use == True:
         logger.info(f"args: {args}")
@@ -281,8 +269,7 @@ if __name__ == "__main__":
                          worker_id,
                          args.no_register,
                          args.model_path,
-                         args.model_name,
-                         args.num_gpus,
-                         args.wbits,
-                         args.groupsize)
+                         args.model_file,
+                         args.num_gpus
+                         )
     uvicorn.run(app, host=args.host, port=args.port, log_level="info")

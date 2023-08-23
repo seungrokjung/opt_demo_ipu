@@ -20,8 +20,8 @@ enable_btn = gr.Button.update(interactive=True)
 disable_btn = gr.Button.update(interactive=False)
 
 priority = {
-    "vicuna-13b": "aaaaaaa",
-    "koala-13b": "aaaaaab",
+    "quantized_opt-1.3b": "aaaaaab",
+    "quantized_chatopt_1.3b_gpt4only": "aaaaaaa",
 }
 
 def get_conv_log_filename():
@@ -69,8 +69,6 @@ def load_demo(url_params, request: gr.Request):
 
 def load_demo_refresh_model_list(request: gr.Request):
     models = get_model_list()
-    # hack
-    models.append("opt-6.7b")
     state = default_conversation.copy()
     return (state, gr.Dropdown.update( choices=models, value=models[0] if len(models) > 0 else ""),
             gr.Chatbot.update(visible=True),
@@ -149,10 +147,7 @@ def post_process_code(code):
 
 def http_bot(state, model_selector, temperature, max_new_tokens, request: gr.Request):
     start_tstamp = time.time()
-    if model_selector  == "opt-6.7b":
-        model_name = "chatopt_1.3b_gpt4only"
-    else:
-        model_name = model_selector
+    model_name = model_selector
     print("selected model: ", model_name)
 
     if state.skip_next:
@@ -243,21 +238,21 @@ markdown_head = ("""
 # Open Pre-trained Transformer Language Model (OPT) on AMD IPU (AIE)
 
 ## Models / Quantization / Optimization
-** opt 1.3b/6.7b model (int8)**
-** torch dynamic PTQ
+** facebook/opt-1.3b, chatopt_1.3b_gpt4only **
+** torch dynamic PTQ (int8)
 ** smooth quant
 """)
 
 #2
 markdown_model_sel = ("""
 ## Model selector:
+** opt-1.3b 
 ** chatopt_1.3b_gpt4only (finetuned opt 1.3b)
-** opt 6.7b 
 """)
 
 license_markdown = ("""
 ### License
-The model is from Huggingface. (https://huggingface.co/facebook/opt-1.3b), (https://huggingface.co/facebook/opt-6.7b).
+The model is from Huggingface. (https://huggingface.co/facebook/opt-1.3b).
 The model is subject to the MIT License. (https://github.com/facebookresearch/metaseq/blob/main/LICENSE)
 """)
 
@@ -366,6 +361,7 @@ if __name__ == "__main__":
     demo = build_demo(theme)
     demo.queue(concurrency_count=args.concurrency_count, status_update_rate=1,
                api_open=False).launch(server_name=args.host, server_port=args.port, 
-               share=True, auth=('amd', '7890'), auth_message = "This is for Non-Commercial use only. Enter your id/password to proceed")
+               share=True)
 
-    demo.launch(share=True)
+    #demo.launch(share=True)
+    demo.launch(share=False)

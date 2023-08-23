@@ -24,12 +24,12 @@ Follow instructions in the README
 Install the packages to the following path:
 C:\Users\Transformers\transformers
 
-2. Clone this repository (https://github.com/seungrokjung/opt_demo_ipu.git) to the following folder:
-C:\Users\Transformers\demo\opt_demo_ipu
+2. Clone release_2_0823 branch of this repository (https://github.com/seungrokjung/opt_demo_ipu.git) to the following folder:
+C:\Users\Transformers\demo
 
 ```bash
 cd C:\Users\Transformers\demo
-git clone https://github.com/seungrokjung/opt_demo_ipu.git
+git clone https://github.com/seungrokjung/opt_demo_ipu.git -b release_2_0823
 cd C:\Users\Transformers\demo\opt_demo_ipu
 ```
 
@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 Quantize the model:
 ```bash
-python weight_dump.py   --action save --model_path facebook/opt-1.3b
+python weight_dump.py --action save --model_path facebook/opt-1.3b
 ```
 
 You can see the quantized torch model in the current directory.
@@ -65,7 +65,7 @@ After you copy the model, the model folder in the current path should look like 
 
 Quantize the model:
 ```bash
-python weight_dump.py   --action save --model_path local_dir/chatopt_1.3b_gpt4only
+python weight_dump.py --action save --model_path local_dir/chatopt_1.3b_gpt4only
 ```
 
 You can see the quantized torch model in the current directory.

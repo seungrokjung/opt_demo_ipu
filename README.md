@@ -38,8 +38,7 @@ cd C:\Users\Transformers\demo\opt_demo_ipu
 pip install -r requirements.txt
 ```
 
-4. Model quantization, Model demo launch
-4.1. open-source model: facebook/opt-1.3b:
+## Open-source model: facebook/opt-1.3b:
 
 Quantize the model:
 ```bash
@@ -57,7 +56,8 @@ This script lanches 1) controller, 2) model worker, and 3) web ux/ui separately.
 launch_demo_opt-1.3b
 ```
 
-4.2. AMD's fine-tuned opt1.3b model: chatopt_1.3b_gpt4only:
+## AMD's fine-tuned model: chatopt_1.3b_gpt4only:
+
 Copy the model to the current directory
 cp -rf chatopt_1.3b_gpt4only .
 After you copy the model, the model folder in the current path should look like this:
@@ -79,16 +79,17 @@ This script lanches 1) controller, 2) model worker, and 3) web ux/ui separately.
 launch_demo_chatopt_1.3b_gpt4only
 ```
 
-7. Once the demo is ready, the environment will look like this (The ERROR message in controller window is negligible):
+## Check the demo status
+
+Once the demo is ready, the environment will look like this (The ERROR message in controller window is negligible):
 <a ><img src="assets/demo_setup.jpg" width="100%"></a>
 
-8. Open a web browswer and navigate to "localhost:1001". Default username/password for the uxui are "amd/7890".
+
+## Accessing the chatbot 
+Open a web browswer and navigate to "localhost:1001"
 
 
 ## Modification
-
-You can change demo uxui interface by changing the markdown here:
-https://github.com/seungrokjung/opt_demo_ipu/blob/5a45c31b1e869d35cc72e12b1f03b7f65a061574/fastchat/serve/gradio_web_server.py#L240
 
 ## Restrictions
 

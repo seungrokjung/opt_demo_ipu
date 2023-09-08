@@ -38,7 +38,7 @@ cd C:\Users\Transformers\demo\opt_demo_ipu
 pip install -r requirements.txt
 ```
 
-## Open-source model: facebook/opt-1.3b:
+## Open-source model: facebook/opt-1.3b
 
 Quantize the model:
 ```bash
@@ -56,7 +56,7 @@ This script lanches 1) controller, 2) model worker, and 3) web ux/ui separately.
 launch_demo_opt-1.3b
 ```
 
-## AMD's fine-tuned model: chatopt_1.3b_gpt4only:
+## AMD's fine-tuned model: chatopt_1.3b_gpt4only
 
 Copy the model to the current directory
 cp -rf chatopt_1.3b_gpt4only .
@@ -77,6 +77,20 @@ Launch a demo script and wait a 2-3 minutes until the quantized model is loaded 
 This script lanches 1) controller, 2) model worker, and 3) web ux/ui separately.
 ```bash
 launch_demo_chatopt_1.3b_gpt4only
+```
+
+## AMD's fine-tuned model: amd-hardcoded
+
+If you already have the amd-hardcoded 1.3b model, you can use this app to launch a demo.
+
+```bash
+quantized_opt1.3b_merged_cnn-daily-0.3_gpt4-wo-orca-0822-clean97k-amd-hardcoded_continue-bingchat-amd.pth
+```
+
+Launch a demo script and wait a 2-3 minutes until the quantized model is loaded to ddr. 
+This script lanches 1) controller, 2) model worker, and 3) web ux/ui separately.
+```bash
+launch_demo_amd-hardcoded.bat
 ```
 
 ## Check the demo status

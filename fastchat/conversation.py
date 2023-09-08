@@ -148,13 +148,15 @@ conv_v0 = Conversation(
 )
 
 conv_bair_v1 = Conversation(
-    system="BEGINNING OF CONVERSATION:",
-    roles=("USER", "GPT"),
-    messages=(),
-    offset=0,
-    sep_style=SeparatorStyle.TWO,
-    sep=" ",
-    sep2="</s>",
+    system="A chat between a curious human and an artificial intelligence assistant. ",
+    roles=("Human", "Assistant"),
+    messages=(
+        ("Human", "Give three tips for staying healthy."),
+        ("Assistant", "Sure, here are three tips for staying healthy:\n")
+    ),
+    offset=2,
+    sep_style=SeparatorStyle.SINGLE,
+    sep="###",
 )
 
 #default_conversation = conv_v1_2

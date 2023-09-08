@@ -273,9 +273,9 @@ def build_demo():
         notice = gr.Markdown(markdown_head)
 
         with gr.Row():
-            gr.Image("images/ryzen_logo.JPG").style(height=322, width=3095)
+            gr.Image("images/ryzen_logo.JPG").style(height=150, width=3095)
 
-        notice = gr.Markdown(markdown_model_sel)
+        #notice = gr.Markdown(markdown_model_sel)
 
         with gr.Row(elem_id="model_selector_row"):
             model_selector = gr.Dropdown(
@@ -302,7 +302,7 @@ def build_demo():
 
         with gr.Accordion("Parameters", open=False, visible=False) as parameter_row:
             temperature = gr.Slider(minimum=0.0, maximum=1.0, value=0.7, step=0.1, interactive=True, label="Temperature",)
-            max_output_tokens = gr.Slider(minimum=0, maximum=256, value=64, step=32, interactive=True, label="Max output tokens",)
+            max_output_tokens = gr.Slider(minimum=0, maximum=256, value=128, step=32, interactive=True, label="Max output tokens",)
 
         gr.Markdown(license_markdown)
 

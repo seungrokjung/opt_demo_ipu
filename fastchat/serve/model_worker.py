@@ -48,7 +48,8 @@ def heart_beat_worker(controller):
 
 def load_model(model_path, model_file, num_gpus):
     model_org =  model_path.split("/")[0]
-    model_name = model_path.split("/")[1]
+    #model_name = model_path.split("/")[1]
+    model_name = "opt-1.3b"
     tokenizer = AutoTokenizer.from_pretrained("facebook/opt-1.3b") #exception: hard-coded
     print("Load INT8 model...")
     model = torch.load(model_file)
@@ -84,7 +85,8 @@ class ModelWorker:
         self.worker_id = worker_id
         if model_path.endswith("/"):
             model_path = model_path[:-1]
-        self.model_name = model_path.split("/")[-1]
+        #self.model_name = model_path.split("/")[-1]
+        self.model_name = "opt-1.3b"
 
         if logger_use == True:
             logger.info(f"Loading the model {self.model_name} on worker {worker_id} ...")

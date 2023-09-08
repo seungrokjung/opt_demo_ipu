@@ -157,11 +157,7 @@ def http_bot(state, model_selector, temperature, max_new_tokens, request: gr.Req
 
     if len(state.messages) == state.offset + 2:
         # First round of conversation
-        if model_name == "chatopt_1.3b_gpt4only":
-            #template_name = "baseline_v0"
-            template_name = "v1"
-        else:
-            template_name = "v1"
+        template_name = "zeroshot_v0"
         new_state = conv_templates[template_name].copy()
         new_state.append_message(new_state.roles[0], state.messages[-2][1])
         new_state.append_message(new_state.roles[1], None)
@@ -238,7 +234,7 @@ markdown_head = ("""
 # Open Pre-trained Transformer Language Model (OPT) on AMD IPU (AIE)
 
 ## Models / Quantization / Optimization
-** facebook/opt-1.3b, chatopt_1.3b_gpt4only **
+** finetuned opt-1.3b **
 ** torch dynamic PTQ (int8)
 ** smooth quant
 """)
@@ -248,11 +244,12 @@ markdown_model_sel = ("""
 ## Model selector:
 ** opt-1.3b 
 ** chatopt_1.3b_gpt4only (finetuned opt 1.3b)
+** amd-hardcoded (finetuned opt 1.3b)
 """)
 
 license_markdown = ("""
 ### License
-The model is from Huggingface. (https://huggingface.co/facebook/opt-1.3b).
+The model is based on this model. (https://huggingface.co/facebook/opt-1.3b).
 The model is subject to the MIT License. (https://github.com/facebookresearch/metaseq/blob/main/LICENSE)
 """)
 
@@ -267,8 +264,9 @@ pre {
 }
 """
 
-def build_demo(theme):
-    with gr.Blocks(title="OPT CHAT DEMO", theme=theme, css=css) as demo:
+def build_demo():
+    #with gr.Blocks(title="OPT CHAT DEMO", theme=theme, css=css) as demo:
+    with gr.Blocks(title="OPT CHAT DEMO", css=css) as demo:
         state = gr.State()
 
         # Draw layout
@@ -304,7 +302,7 @@ def build_demo(theme):
 
         with gr.Accordion("Parameters", open=False, visible=False) as parameter_row:
             temperature = gr.Slider(minimum=0.0, maximum=1.0, value=0.7, step=0.1, interactive=True, label="Temperature",)
-            max_output_tokens = gr.Slider(minimum=0, maximum=1024, value=512, step=64, interactive=True, label="Max output tokens",)
+            max_output_tokens = gr.Slider(minimum=0, maximum=256, value=64, step=32, interactive=True, label="Max output tokens",)
 
         gr.Markdown(license_markdown)
 
@@ -357,8 +355,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     models = get_model_list()
-    theme = gr.Theme.from_hub("Taithrah/Minimal")
-    demo = build_demo(theme)
+    #theme = gr.Theme.from_hub("Taithrah/Minimal")
+    #demo = build_demo(theme)
+    demo = build_demo()
     demo.queue(concurrency_count=args.concurrency_count, status_update_rate=1,
                api_open=False).launch(server_name=args.host, server_port=args.port, 
                share=True)

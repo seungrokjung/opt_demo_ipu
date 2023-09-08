@@ -136,10 +136,12 @@ conv_v1_2 = Conversation(
 
 # zero shot
 conv_v0 = Conversation(
-    system="A chat between a curious human and an artificial intelligence assistant. "
-           "The assistant gives helpful, detailed, and polite answers to the human's questions.",
+    system="A chat between human and an artificial intelligence assistant",
     roles=("Human", "Assistant"),
-    messages=(),
+    messages=(
+        ("Human", ""),
+        ("Assistant", "")
+    ),
     offset=2,
     sep_style=SeparatorStyle.SINGLE,
     sep="###",
@@ -155,11 +157,12 @@ conv_bair_v1 = Conversation(
     sep2="</s>",
 )
 
-default_conversation = conv_v1_2
+#default_conversation = conv_v1_2
+default_conversation = conv_bair_v1
 conv_templates = {
     "v1": conv_v1_2,
     "bair_v1": conv_bair_v1,
-    "baseline_v0": conv_v0,
+    "zeroshot_v0": conv_bair_v1,
 }
 
 if __name__ == "__main__":

@@ -49,11 +49,8 @@ def heart_beat_worker(controller):
 def load_model(model_path, model_file, num_gpus):
     model_org =  model_path.split("/")[0]
     model_name = model_path.split("/")[1]
-    if model_org == "local_dir":
-        tokenizer = AutoTokenizer.from_pretrained(model_name) #exception: hard-coded
-    else:
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-    print("Load FP32 model...")
+    tokenizer = AutoTokenizer.from_pretrained("facebook/opt-1.3b") #exception: hard-coded
+    print("Load INT8 model...")
     model = torch.load(model_file)
     model.eval()
 
@@ -192,7 +189,7 @@ class ModelWorker:
 
             if i % args.stream_interval == 0 or i == max_new_tokens - 1 or stopped:
                 #output = tokenizer.decode(output_ids, skip_special_tokens=True)
-                output = tokenizer.decode(output_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)
+                output = tokenizer.decode(output_ids, skip_special_tokens=True, clean_up_tokenization_spaces=True)
                 pos = output.rfind(stop_str, l_prompt)
                 if pos != -1:
                     output = output[:pos]
@@ -254,8 +251,8 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=21002)
     parser.add_argument("--worker-address", type=str, default="http://127.0.0.1:21002")
     parser.add_argument("--controller-address", type=str, default="http://127.0.0.1:21005")
-    parser.add_argument("--model-path", type=str, default="facebook/opt-1.3b", choices=["facebook/opt-1.3b", "local_dir/chatopt_1.3b_gpt4only"])
-    parser.add_argument("--model-file", type=str, default="quantized_opt-1.3b.pth", choices=["quantized_opt-1.3b.pth", "quantized_chatopt_1.3b_gpt4only.pth"])
+    parser.add_argument("--model-path", type=str, default="facebook/opt-1.3b", choices=["facebook/opt-1.3b", "local_dir/chatopt_1.3b_gpt4only", "local_dir/amd-hardcoded"])
+    parser.add_argument("--model-file", type=str, default="quantized_opt-1.3b.pth", choices=["quantized_opt-1.3b.pth", "quantized_chatopt_1.3b_gpt4only.pth", "quantized_opt1.3b_merged_cnn-daily-0.3_gpt4-wo-orca-0822-clean97k-amd-hardcoded_continue-bingchat-amd.pth"])
     parser.add_argument("--num-gpus", type=int, default=0)
     parser.add_argument("--limit-model-concurrency", type=int, default=5)
     parser.add_argument("--stream-interval", type=int, default=2)
